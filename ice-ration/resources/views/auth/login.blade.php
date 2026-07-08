@@ -1,0 +1,41 @@
+<x-layouts.guest title="Login - Ice Ration System">
+    <div class="w-full max-w-sm bg-white rounded-2xl shadow-lg p-8">
+        <div class="text-center mb-8">
+            <div class="mx-auto w-14 h-14 rounded-full bg-blue-600 text-white flex items-center justify-center text-2xl font-bold">
+                ❄
+            </div>
+            <h1 class="mt-4 text-xl font-bold text-slate-800">Ice Ration System</h1>
+            <p class="text-sm text-slate-500">Sign in to continue</p>
+        </div>
+
+        @if ($errors->any())
+            <div class="mb-4 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm p-3">
+                {{ $errors->first() }}
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('login') }}" class="space-y-4">
+            @csrf
+            <div>
+                <label for="mobile" class="block text-sm font-medium text-slate-700 mb-1">Mobile Number</label>
+                <input id="mobile" name="mobile" type="text" inputmode="numeric" autofocus required
+                    value="{{ old('mobile') }}"
+                    class="w-full rounded-lg border border-slate-300 px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="password" class="block text-sm font-medium text-slate-700 mb-1">Password</label>
+                <input id="password" name="password" type="password" required
+                    class="w-full rounded-lg border border-slate-300 px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <label class="flex items-center gap-2 text-sm text-slate-600">
+                <input type="checkbox" name="remember" class="rounded border-slate-300">
+                Remember me
+            </label>
+            <button type="submit"
+                class="w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 text-base transition"
+                style="min-height:48px">
+                Sign In
+            </button>
+        </form>
+    </div>
+</x-layouts.guest>
