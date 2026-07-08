@@ -1,58 +1,136 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# ❄️ Ice Ration Distribution System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A full-stack **Supply Chain & Ration Distribution Management System** for ice
+distribution. Supply trucks deliver bulk ice to distribution hubs
+("Stations" / *Sarpol*), and citizens claim a pre-allocated daily ration
+using a permanent identifier (QR/barcode card, National ID, or mobile
+number) — no paper coupons.
 
-## About Laravel
+Built with **Laravel 13** + **MySQL 8** + **Blade/Alpine.js/Tailwind CSS**.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## ✨ Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| Role | Panel | Highlights |
+|---|---|---|
+| **Super Admin** | Desktop | Stations, staff, and citizen CRUD; QR card printing; manual inventory adjustments; full **analytics dashboard** (KPIs, charts, CSV export) |
+| **Station Agent** | Mobile-first | QR/manual citizen lookup, green/red claim-status cards, one-tap ration confirmation, truck delivery confirmation |
+| **Truck Driver** | Mobile-first | 3-step delivery reporting, delivery history |
 
-## Learning Laravel
+### Core business rules enforced
+- One ration claim per citizen per calendar day (`citizen_id + date` uniqueness).
+- Nightly cron expires unclaimed tickets and generates fresh ones — **no rollover**.
+- Inventory deduction is atomic (DB transaction + row locking + `CHECK` constraint safety net).
+- Truck deliveries require station agent confirmation before stock updates.
+- Citizens are looked up by National ID, mobile number, or QR code — all resolve to the same record.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🛠 Tech Stack
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+- **Backend:** Laravel 13, PHP 8.3
+- **Database:** MySQL 8 (ENUM types + CHECK constraints)
+- **Frontend:** Blade + Alpine.js + Tailwind CSS (via CDN, no build step required)
+- **QR:** `simplesoftwareio/simple-qrcode` (generation) + `html5-qrcode` (browser camera scanning)
+- **Auth:** Laravel session auth with a custom `role` column + `EnsureRole` middleware
+- **Scheduling:** Laravel Scheduler (`tickets:daily-reset` at 00:00)
 
-## Agentic Development
+See [`.agents/skills/ice-ration-system/`](../.agents/skills/ice-ration-system) for the full architecture spec, DB schema, and implementation plan this project was built from.
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+---
+
+## 🚀 Getting Started
+
+### Requirements
+- PHP 8.3+
+- Composer
+- MySQL 8+
+- Node.js (optional — only needed if you later add a real asset build step)
+
+### Setup
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer install
+cp .env.example .env
+php artisan key:generate
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Configure your database in `.env`:
 
-## Contributing
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=ice_ration
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Run migrations and seed demo data:
 
-## Code of Conduct
+```bash
+php artisan migrate --seed
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Seeded accounts (password for all: `password`):
 
-## Security Vulnerabilities
+| Role | Mobile |
+|---|---|
+| Super Admin | `0900000000` |
+| Station Agent | `0921000001`, `0921000002`, ... |
+| Truck Driver | `0931000001`, `0931000002` |
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Start the dev server:
 
-## License
+```bash
+php artisan serve
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Run the daily reset job manually
+
+```bash
+php artisan tickets:daily-reset
+```
+
+In production, the Laravel scheduler (`routes/console.php`) fires this automatically at midnight — make sure your server crontab runs:
+
+```cron
+* * * * * php /path/to/artisan schedule:run >> /dev/null 2>&1
+```
+
+### Run tests
+
+```bash
+php artisan test
+```
+
+---
+
+## 📁 Project Structure
+
+```
+app/
+  Console/Commands/ResetDailyTickets.php   # nightly reset job
+  Http/Controllers/
+    Admin/     # stations, staff, citizens, inventory, analytics
+    Agent/     # citizen validation + claim, delivery confirmation
+    Driver/    # delivery reporting
+    Auth/      # mobile+password login
+  Models/      # User, Station, Citizen, DailyTicket, Delivery, InventoryLog
+database/
+  migrations/  # full schema per schema.md
+  seeders/     # SuperAdminSeeder, StationSeeder, DemoStaffSeeder, CitizenSeeder
+resources/views/
+  admin/ agent/ driver/ auth/ components/layouts/
+routes/
+  web.php      # role-scoped route groups (admin/agent/driver)
+  console.php  # scheduled daily reset
+tests/Feature/ # atomic claim, insufficient stock, daily reset, panel smoke tests
+```
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](../LICENSE).
