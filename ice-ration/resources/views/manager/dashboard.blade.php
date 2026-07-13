@@ -13,15 +13,26 @@
                 </select>
             </div>
             <div>
-                <label class="block text-sm font-medium text-slate-700 mb-1">2. Number of Ice Blocks</label>
+                <label class="block text-sm font-medium text-slate-700 mb-1">2. Select Truck</label>
+                <select name="truck_id" required class="w-full rounded-xl border border-slate-300 px-4 py-3 text-lg" style="min-height:48px">
+                    <option value="">Choose a truck...</option>
+                    @foreach ($trucks as $truck)
+                        <option value="{{ $truck->id }}" @selected(old('truck_id') == $truck->id)>
+                            {{ $truck->plate_number }} ({{ $truck->capacity }} blocks)
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">3. Number of Ice Blocks</label>
                 <input type="number" name="blocks_delivered" min="1" required inputmode="numeric"
                     value="{{ old('blocks_delivered') }}"
                     placeholder="e.g. 200"
                     class="w-full rounded-xl border border-slate-300 px-4 py-3 text-2xl font-bold" style="min-height:48px">
             </div>
             <div>
-                <label class="block text-sm font-medium text-slate-700 mb-1">Truck Plate / Identifier</label>
-                <input type="text" name="truck_plate" value="{{ old('truck_plate') }}"
+                <label class="block text-sm font-medium text-slate-700 mb-1">Notes (optional)</label>
+                <input type="text" name="notes" value="{{ old('notes') }}"
                     class="w-full rounded-xl border border-slate-300 px-4 py-3 text-base" style="min-height:48px">
             </div>
             <button type="submit"

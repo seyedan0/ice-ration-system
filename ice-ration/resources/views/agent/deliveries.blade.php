@@ -7,9 +7,9 @@
                 <div class="flex items-center justify-between mb-2">
                     <p class="font-bold text-slate-800">
                         {{ $delivery->manager->name ?? 'Unknown manager' }}
-                        @if($delivery->truck_plate)
-                            <span class="text-sm font-normal text-slate-500 ml-2">({{ $delivery->truck_plate }})</span>
-                        @endif
+                                                @if($delivery->truck)
+                                                    <span class="text-sm font-normal text-slate-500 ml-2">({{ $delivery->truck->plate_number }})</span>
+                                                @endif
                     </p>
                     @if ($delivery->status === 'pending')
                         <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 text-xs font-semibold">Pending</span>

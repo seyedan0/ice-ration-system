@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Delivery;
 use App\Models\Station;
+use App\Models\Truck;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -19,6 +20,7 @@ class DeliveryFactory extends Factory
         return [
             'station_id' => Station::factory(),
             'manager_id' => User::factory()->truckManager(),
+            'truck_id' => Truck::factory(),
             'blocks_delivered' => 100,
             'status' => Delivery::STATUS_PENDING,
         ];

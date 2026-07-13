@@ -11,6 +11,7 @@ use App\Http\Controllers\Agent\DeliveryController as AgentDeliveryController;
 use App\Http\Controllers\Agent\TicketController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Manager\DeliveryController as ManagerDeliveryController;
+use App\Http\Controllers\Manager\Truck\TruckController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -88,4 +89,7 @@ Route::middleware(['auth', 'role:' . User::ROLE_TRUCK_MANAGER])
         Route::get('dashboard', [ManagerDeliveryController::class, 'create'])->name('dashboard');
         Route::post('deliveries', [ManagerDeliveryController::class, 'store'])->name('deliveries.store');
         Route::get('deliveries/history', [ManagerDeliveryController::class, 'history'])->name('deliveries.history');
+
+        // Truck management for managers
+        Route::resource('trucks', TruckController::class)->except(['show']);
     });
