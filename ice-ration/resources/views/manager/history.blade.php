@@ -1,5 +1,5 @@
 <x-layouts.mobile title="Delivery History">
-    <a href="{{ route('driver.dashboard') }}" class="text-sm text-slate-500 mb-3 inline-block">← Back to dashboard</a>
+    <a href="{{ route('manager.dashboard') }}" class="text-sm text-slate-500 mb-3 inline-block">← Back to dashboard</a>
 
     <div class="space-y-3">
         @forelse ($deliveries as $delivery)

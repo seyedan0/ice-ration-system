@@ -35,7 +35,7 @@ class DemoStaffSeeder extends Seeder
                 [
                     'name' => 'Driver ' . $i,
                     'password' => Hash::make('password'),
-                    'role' => User::ROLE_TRUCK_DRIVER,
+                    'role' => User::ROLE_TRUCK_MANAGER,
                     'station_id' => null,
                     'is_active' => true,
                 ]

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name', 150);
             $table->string('mobile', 20)->unique();
             $table->string('password');
-            $table->enum('role', ['super_admin', 'station_agent', 'truck_driver']);
+            $table->enum('role', ['super_admin', 'station_agent', 'truck_manager']);
             $table->foreignId('station_id')->nullable()->constrained('stations')->nullOnDelete();
             $table->boolean('is_active')->default(true);
             $table->rememberToken();

@@ -19,7 +19,9 @@ class Delivery extends Model
 
     protected $fillable = [
         'station_id',
-        'driver_id',
+        'manager_id',
+        'truck_plate',
+        'truck_plate',
         'blocks_delivered',
         'status',
         'confirmed_at',
@@ -41,9 +43,9 @@ class Delivery extends Model
         return $this->belongsTo(Station::class);
     }
 
-    public function driver(): BelongsTo
+    public function manager(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'driver_id');
+        return $this->belongsTo(User::class, 'manager_id');
     }
 
     public function confirmedByAgent(): BelongsTo

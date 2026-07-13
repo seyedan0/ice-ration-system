@@ -51,7 +51,7 @@ class LoginController extends Controller
         return match ($user->role) {
             User::ROLE_SUPER_ADMIN => '/admin/dashboard',
             User::ROLE_STATION_AGENT => '/agent/dashboard',
-            User::ROLE_TRUCK_DRIVER => '/driver/dashboard',
+            User::ROLE_TRUCK_MANAGER => '/manager/dashboard',
             default => '/login',
         };
     }

@@ -50,10 +50,10 @@ class UserFactory extends Factory
         ]);
     }
 
-    public function truckDriver(): static
+    public function truckManager(): static
     {
         return $this->state(fn (array $attributes) => [
-            'role' => User::ROLE_TRUCK_DRIVER,
+            'role' => User::ROLE_TRUCK_MANAGER,
             'station_id' => null,
         ]);
     }

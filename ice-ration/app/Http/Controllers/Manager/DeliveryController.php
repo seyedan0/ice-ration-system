@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Driver;
+namespace App\Http\Controllers\Manager;
 
 use App\Http\Controllers\Controller;
 use App\Models\Delivery;
@@ -15,12 +15,12 @@ class DeliveryController extends Controller
         $stations = Station::query()->active()->orderBy('name')->get();
 
         $recent = Delivery::query()
-            ->where('driver_id', $request->user()->id)
+            ->where('manager_id', $request->user()->id)
             ->orderByDesc('submitted_at')
             ->limit(5)
             ->get();
 
-        return view('driver.dashboard', compact('stations', 'recent'));
+        return view('manager.dashboard', compact('stations', 'recent'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -28,30 +28,32 @@ class DeliveryController extends Controller
         $data = $request->validate([
             'station_id' => ['required', 'exists:stations,id'],
             'blocks_delivered' => ['required', 'integer', 'min:1', 'max:100000'],
+            'truck_plate' => ['nullable', 'string', 'max:50'],
             'notes' => ['nullable', 'string', 'max:255'],
         ]);
 
         Delivery::create([
             'station_id' => $data['station_id'],
-            'driver_id' => $request->user()->id,
+            'manager_id' => $request->user()->id,
             'blocks_delivered' => $data['blocks_delivered'],
+            'truck_plate' => $data['truck_plate'] ?? null,
             'notes' => $data['notes'] ?? null,
             'status' => Delivery::STATUS_PENDING,
         ]);
 
-        return redirect()->route('driver.dashboard')
+        return redirect()->route('manager.dashboard')
             ->with('status', 'Delivery reported. Waiting for agent confirmation.');
     }
 
     public function history(Request $request)
     {
         $deliveries = Delivery::query()
-            ->where('driver_id', $request->user()->id)
+            ->where('manager_id', $request->user()->id)
             ->with('station')
             ->orderByDesc('submitted_at')
             ->limit(10)
             ->get();
 
-        return view('driver.history', compact('deliveries'));
+        return view('manager.history', compact('deliveries'));
     }
 }

@@ -10,7 +10,7 @@ use App\Http\Controllers\Agent\DashboardController as AgentDashboardController;
 use App\Http\Controllers\Agent\DeliveryController as AgentDeliveryController;
 use App\Http\Controllers\Agent\TicketController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Driver\DeliveryController as DriverDeliveryController;
+use App\Http\Controllers\Manager\DeliveryController as ManagerDeliveryController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -81,11 +81,11 @@ Route::middleware(['auth', 'role:' . User::ROLE_STATION_AGENT])
 | Truck Driver routes (mobile-first panel)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:' . User::ROLE_TRUCK_DRIVER])
-    ->prefix('driver')
-    ->name('driver.')
+Route::middleware(['auth', 'role:' . User::ROLE_TRUCK_MANAGER])
+    ->prefix('manager')
+    ->name('manager.')
     ->group(function () {
-        Route::get('dashboard', [DriverDeliveryController::class, 'create'])->name('dashboard');
-        Route::post('deliveries', [DriverDeliveryController::class, 'store'])->name('deliveries.store');
-        Route::get('deliveries/history', [DriverDeliveryController::class, 'history'])->name('deliveries.history');
+        Route::get('dashboard', [ManagerDeliveryController::class, 'create'])->name('dashboard');
+        Route::post('deliveries', [ManagerDeliveryController::class, 'store'])->name('deliveries.store');
+        Route::get('deliveries/history', [ManagerDeliveryController::class, 'history'])->name('deliveries.history');
     });

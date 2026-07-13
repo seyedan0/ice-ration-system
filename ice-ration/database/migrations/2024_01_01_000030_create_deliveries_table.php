@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('deliveries', function (Blueprint $table) {
             $table->id();
             $table->foreignId('station_id')->constrained('stations');
-            $table->foreignId('driver_id')->constrained('users');
+            $table->foreignId('manager_id')->constrained('users');
+            $table->string('truck_plate', 50)->nullable();
             $table->integer('blocks_delivered');
             $table->enum('status', ['pending', 'confirmed', 'rejected'])->default('pending');
             $table->timestamp('submitted_at')->useCurrent();
@@ -23,7 +24,7 @@ return new class extends Migration
             $table->text('notes')->nullable();
 
             $table->index(['station_id', 'status']);
-            $table->index('driver_id');
+            $table->index('manager_id');
             $table->index('submitted_at');
         });
     }

@@ -19,7 +19,7 @@ class DeliveryController extends Controller
         $deliveries = $station
             ? Delivery::query()
                 ->where('station_id', $station->id)
-                ->with('driver')
+                ->with('manager')
                 ->orderByDesc('submitted_at')
                 ->limit(30)
                 ->get()

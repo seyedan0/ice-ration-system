@@ -20,7 +20,7 @@ class User extends Authenticatable
 
     public const ROLE_SUPER_ADMIN = 'super_admin';
     public const ROLE_STATION_AGENT = 'station_agent';
-    public const ROLE_TRUCK_DRIVER = 'truck_driver';
+    public const ROLE_TRUCK_MANAGER = 'truck_manager';
 
     /**
      * Get the attributes that should be cast.
@@ -48,7 +48,7 @@ class User extends Authenticatable
      */
     public function deliveries(): HasMany
     {
-        return $this->hasMany(Delivery::class, 'driver_id');
+        return $this->hasMany(Delivery::class, 'manager_id');
     }
 
     /**
@@ -69,8 +69,8 @@ class User extends Authenticatable
         return $this->role === self::ROLE_STATION_AGENT;
     }
 
-    public function isTruckDriver(): bool
+    public function isTruckManager(): bool
     {
-        return $this->role === self::ROLE_TRUCK_DRIVER;
+        return $this->role === self::ROLE_TRUCK_MANAGER;
     }
 }

@@ -22,7 +22,7 @@ class PanelSmokeTest extends TestCase
     {
         $this->get('/admin/dashboard')->assertRedirect('/login');
         $this->get('/agent/dashboard')->assertRedirect('/login');
-        $this->get('/driver/dashboard')->assertRedirect('/login');
+        $this->get('/manager/dashboard')->assertRedirect('/login');
     }
 
     public function test_super_admin_can_view_all_admin_pages(): void
@@ -62,13 +62,13 @@ class PanelSmokeTest extends TestCase
         $this->actingAs($agent)->get('/agent/deliveries')->assertOk();
     }
 
-    public function test_truck_driver_panel_pages_render(): void
+    public function test_truck_manager_panel_pages_render(): void
     {
         Station::factory()->create();
-        $driver = User::factory()->truckDriver()->create();
+        $driver = User::factory()->truckManager()->create();
 
-        $this->actingAs($driver)->get('/driver/dashboard')->assertOk()->assertSee('New Delivery');
-        $this->actingAs($driver)->get('/driver/deliveries/history')->assertOk();
+        $this->actingAs($driver)->get('/manager/dashboard')->assertOk()->assertSee('New Delivery');
+        $this->actingAs($driver)->get('/manager/deliveries/history')->assertOk();
     }
 
     public function test_citizen_card_and_qr_render(): void

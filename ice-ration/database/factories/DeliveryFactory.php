@@ -18,7 +18,7 @@ class DeliveryFactory extends Factory
     {
         return [
             'station_id' => Station::factory(),
-            'driver_id' => User::factory()->truckDriver(),
+            'manager_id' => User::factory()->truckManager(),
             'blocks_delivered' => 100,
             'status' => Delivery::STATUS_PENDING,
         ];

@@ -15,7 +15,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $users = User::query()
-            ->whereIn('role', [User::ROLE_STATION_AGENT, User::ROLE_TRUCK_DRIVER])
+            ->whereIn('role', [User::ROLE_STATION_AGENT, User::ROLE_TRUCK_MANAGER])
             ->with('station')
             ->when($request->filled('role'), fn ($q) => $q->where('role', $request->string('role')))
             ->when($request->filled('search'), fn ($q) => $q->where('name', 'like', '%' . $request->string('search') . '%'))
@@ -86,7 +86,7 @@ class UserController extends Controller
         $rules = [
             'name' => ['required', 'string', 'max:150'],
             'mobile' => ['required', 'string', 'max:20', Rule::unique('users', 'mobile')->ignore($user)],
-            'role' => ['required', Rule::in([User::ROLE_STATION_AGENT, User::ROLE_TRUCK_DRIVER])],
+            'role' => ['required', Rule::in([User::ROLE_STATION_AGENT, User::ROLE_TRUCK_MANAGER])],
             'station_id' => ['nullable', 'exists:stations,id', 'required_if:role,' . User::ROLE_STATION_AGENT],
             'is_active' => ['sometimes', 'boolean'],
             'password' => [$user ? 'nullable' : 'required', 'string', 'min:6'],
@@ -95,7 +95,7 @@ class UserController extends Controller
         $data = $request->validate($rules);
         $data['is_active'] = $request->boolean('is_active', true);
 
-        if ($data['role'] === User::ROLE_TRUCK_DRIVER) {
+        if ($data['role'] === User::ROLE_TRUCK_MANAGER) {
             $data['station_id'] = null;
         }
 

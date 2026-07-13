@@ -1,7 +1,7 @@
 <x-layouts.mobile title="Report Delivery">
     <div class="bg-white rounded-2xl shadow p-5 mb-4">
         <h2 class="font-bold text-lg text-slate-800 mb-4">New Delivery</h2>
-        <form method="POST" action="{{ route('driver.deliveries.store') }}" class="space-y-4">
+        <form method="POST" action="{{ route('manager.deliveries.store') }}" class="space-y-4">
             @csrf
             <div>
                 <label class="block text-sm font-medium text-slate-700 mb-1">1. Select Station</label>
@@ -20,8 +20,8 @@
                     class="w-full rounded-xl border border-slate-300 px-4 py-3 text-2xl font-bold" style="min-height:48px">
             </div>
             <div>
-                <label class="block text-sm font-medium text-slate-700 mb-1">Notes (optional)</label>
-                <input type="text" name="notes" value="{{ old('notes') }}"
+                <label class="block text-sm font-medium text-slate-700 mb-1">Truck Plate / Identifier</label>
+                <input type="text" name="truck_plate" value="{{ old('truck_plate') }}"
                     class="w-full rounded-xl border border-slate-300 px-4 py-3 text-base" style="min-height:48px">
             </div>
             <button type="submit"
@@ -31,7 +31,7 @@
         </form>
     </div>
 
-    <a href="{{ route('driver.deliveries.history') }}" class="tap-target block text-center w-full rounded-xl bg-slate-200 text-slate-700 font-semibold py-3">
+    <a href="{{ route('manager.deliveries.history') }}" class="tap-target block text-center w-full rounded-xl bg-slate-200 text-slate-700 font-semibold py-3">
         View My Delivery History
     </a>
 

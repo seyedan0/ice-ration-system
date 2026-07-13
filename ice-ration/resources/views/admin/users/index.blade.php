@@ -6,7 +6,7 @@
             <select name="role" class="rounded-lg border border-slate-300 px-3 py-2 text-sm">
                 <option value="">All roles</option>
                 <option value="station_agent" @selected(request('role') === 'station_agent')>Station Agent</option>
-                <option value="truck_driver" @selected(request('role') === 'truck_driver')>Truck Driver</option>
+                <option value="truck_manager" @selected(request('role') === 'truck_manager')>Truck Manager</option>
             </select>
             <button class="px-3 py-2 rounded-lg bg-slate-200 text-sm">Filter</button>
         </form>

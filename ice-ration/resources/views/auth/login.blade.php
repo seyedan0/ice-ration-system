@@ -4,7 +4,7 @@
             <div class="mx-auto w-14 h-14 rounded-full bg-blue-600 text-white flex items-center justify-center text-2xl font-bold">
                 ❄
             </div>
-            <h1 class="mt-4 text-xl font-bold text-slate-800">Ice Ration System</h1>
+            <h1 class="mt-4 text-xl font-bold text-slate-800">ابوالقربه</h1>
             <p class="text-sm text-slate-500">Sign in to continue</p>
         </div>
 
