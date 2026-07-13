@@ -46,6 +46,10 @@
         View My Delivery History
     </a>
 
+    <a href="{{ route('manager.drivers.index') }}" class="tap-target block text-center w-full rounded-xl bg-slate-200 text-slate-700 font-semibold py-3 mt-2">
+        Manage My Drivers
+    </a>
+
     @if ($recent->isNotEmpty())
         <div class="mt-6">
             <h3 class="text-sm font-semibold text-slate-500 mb-2">Recent Deliveries</h3>

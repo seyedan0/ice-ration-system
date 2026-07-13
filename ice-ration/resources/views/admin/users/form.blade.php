@@ -17,9 +17,10 @@
             <div>
                 <label class="block text-sm font-medium text-slate-700 mb-1">Role</label>
                 <select name="role" x-model="role" required class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
-                    <option value="station_agent">Station Agent</option>
-                    <option value="truck_manager">Truck Manager</option>
-                </select>
+                                    <option value="station_agent">Station Agent</option>
+                                    <option value="truck_manager">Truck Manager</option>
+                                    <option value="truck_driver">Truck Driver</option>
+                                </select>
             </div>
             <div x-show="role === 'station_agent'">
                 <label class="block text-sm font-medium text-slate-700 mb-1">Assigned Station</label>
@@ -27,6 +28,15 @@
                     <option value="">Select station...</option>
                     @foreach ($stations as $station)
                         <option value="{{ $station->id }}" @selected(old('station_id', $user->station_id) == $station->id)>{{ $station->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div x-show="role === 'truck_driver'">
+                <label class="block text-sm font-medium text-slate-700 mb-1">Assigned Manager</label>
+                <select name="manager_id" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                    <option value="">Select manager...</option>
+                    @foreach ($managers as $manager)
+                        <option value="{{ $manager->id }}" @selected(old('manager_id', $user->manager_id) == $manager->id)>{{ $manager->name }}</option>
                     @endforeach
                 </select>
             </div>

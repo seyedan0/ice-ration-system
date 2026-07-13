@@ -15,14 +15,15 @@ Built with **Laravel 13** + **MySQL 8** + **Blade/Alpine.js/Tailwind CSS**.
 | Role | Panel | Highlights |
 |---|---|---|
 | **Super Admin** | Desktop | Stations, staff, and citizen CRUD; QR card printing; manual inventory adjustments; full **analytics dashboard** (KPIs, charts, CSV export) |
-| **Station Agent** | Mobile-first | QR/manual citizen lookup, green/red claim-status cards, one-tap ration confirmation, truck delivery confirmation |
-| **Truck Driver** | Mobile-first | 3-step delivery reporting, delivery history |
+| **Station Agent** | Mobile-first | QR/manual citizen lookup, green/red claim-status cards, one-tap ration confirmation, truck manager delivery confirmation |
+| **Truck Manager** | Mobile-first | **Fleet & driver management**: register/edit/deactivate their own trucks; create/manage drivers assigned to their fleet; 2-step delivery reporting (select station → select truck → blocks); delivery history |
 
 ### Core business rules enforced
 - One ration claim per citizen per calendar day (`citizen_id + date` uniqueness).
 - Nightly cron expires unclaimed tickets and generates fresh ones — **no rollover**.
 - Inventory deduction is atomic (DB transaction + row locking + `CHECK` constraint safety net).
 - Truck deliveries require station agent confirmation before stock updates.
+- Each **Truck Manager** owns one or more trucks (CRUD scoped to their own fleet via `TruckPolicy`). Deliveries reference both the manager and the specific truck assigned.
 - Citizens are looked up by National ID, mobile number, or QR code — all resolve to the same record.
 
 ---
@@ -79,7 +80,9 @@ Seeded accounts (password for all: `password`):
 |---|---|
 | Super Admin | `0900000000` |
 | Station Agent | `0921000001`, `0921000002`, ... |
-| Truck Driver | `0931000001`, `0931000002` |
+| Truck Manager | `0931000001`, `0931000002` |
+
+Truck managers own no trucks by default — each must register trucks under **My Trucks** (`/manager/trucks`) before filing deliveries.
 
 Start the dev server:
 
@@ -115,16 +118,17 @@ app/
   Http/Controllers/
     Admin/     # stations, staff, citizens, inventory, analytics
     Agent/     # citizen validation + claim, delivery confirmation
-    Driver/    # delivery reporting
+    Manager/   # delivery reporting + Manager\Truck CRUD (fleet mgmt) + Manager\Driver CRUD (driver mgmt)
     Auth/      # mobile+password login
-  Models/      # User, Station, Citizen, DailyTicket, Delivery, InventoryLog
+  Models/      # User, Station, Citizen, DailyTicket, Delivery, InventoryLog, Truck
+  Policies/    # TruckPolicy (ownership authorization on truck CRUD)
 database/
   migrations/  # full schema per schema.md
   seeders/     # SuperAdminSeeder, StationSeeder, DemoStaffSeeder, CitizenSeeder
 resources/views/
-  admin/ agent/ driver/ auth/ components/layouts/
+  admin/ agent/ manager/ manager/trucks/ manager/driver/ auth/ components/layouts/
 routes/
-  web.php      # role-scoped route groups (admin/agent/driver)
+  web.php      # role-scoped route groups (admin/agent/manager)
   console.php  # scheduled daily reset
 tests/Feature/ # atomic claim, insufficient stock, daily reset, panel smoke tests
 ```

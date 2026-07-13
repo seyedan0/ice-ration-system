@@ -91,5 +91,8 @@ Route::middleware(['auth', 'role:' . User::ROLE_TRUCK_MANAGER])
         Route::get('deliveries/history', [ManagerDeliveryController::class, 'history'])->name('deliveries.history');
 
         // Truck management for managers
-        Route::resource('trucks', TruckController::class)->except(['show']);
+                Route::resource('trucks', TruckController::class)->except(['show']);
+
+                // Driver management for managers
+                Route::resource('drivers', App\Http\Controllers\Manager\Driver\DriverController::class)->except(['show']);
     });

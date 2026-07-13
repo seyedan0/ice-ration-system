@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'mobile', 'password', 'role', 'station_id', 'is_active'])]
+#[Fillable(['name', 'mobile', 'password', 'role', 'station_id', 'manager_id', 'is_active'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -21,6 +21,7 @@ class User extends Authenticatable
     public const ROLE_SUPER_ADMIN = 'super_admin';
     public const ROLE_STATION_AGENT = 'station_agent';
     public const ROLE_TRUCK_MANAGER = 'truck_manager';
+    public const ROLE_TRUCK_DRIVER = 'truck_driver';
 
     /**
      * Get the attributes that should be cast.
@@ -44,7 +45,24 @@ class User extends Authenticatable
     }
 
     /**
-     * Deliveries submitted by this user (as a truck driver).
+     * The truck manager who owns this driver account (only set for truck_driver users).
+     */
+    public function manager(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'manager_id');
+    }
+
+    /**
+     * Truck drivers created by this truck manager.
+     */
+    public function drivers(): HasMany
+    {
+        return $this->hasMany(User::class, 'manager_id')
+            ->where('role', self::ROLE_TRUCK_DRIVER);
+    }
+
+    /**
+     * Deliveries submitted by this user (as a truck driver / truck manager).
      */
     public function deliveries(): HasMany
     {
@@ -72,5 +90,10 @@ class User extends Authenticatable
     public function isTruckManager(): bool
     {
         return $this->role === self::ROLE_TRUCK_MANAGER;
+    }
+
+    public function isTruckDriver(): bool
+    {
+        return $this->role === self::ROLE_TRUCK_DRIVER;
     }
 }
