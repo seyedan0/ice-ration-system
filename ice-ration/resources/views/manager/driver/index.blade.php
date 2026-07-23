@@ -1,10 +1,10 @@
-<x-layouts.mobile title="My Drivers">
+<x-layouts.mobile :title="__('site.my_drivers')">
     <div class="bg-white rounded-2xl shadow p-5 mb-4">
         <div class="flex justify-between items-center mb-4">
-            <h2 class="font-bold text-lg text-slate-800">My Drivers</h2>
+            <h2 class="font-bold text-lg text-slate-800">{{ __('site.my_drivers') }}</h2>
             <a href="{{ route('manager.drivers.create') }}" 
                class="tap-target inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
-                Add Driver
+                {{ __('site.add_driver') }}
             </a>
         </div>
 
@@ -28,16 +28,15 @@
                         <div class="flex space-x-3">
                             <a href="{{ route('manager.drivers.edit', $driver) }}" 
                                class="tap-target text-sm font-medium text-indigo-600 hover:text-indigo-900">
-                                Edit
+                                {{ __('site.edit') }}
                             </a>
                             <form action="{{ route('manager.drivers.destroy', $driver) }}" method="POST" 
-                                  onsubmit="return confirm('Are you sure you want to deactivate this driver?');"
-                                  style="display: inline;">
+                                  onsubmit="return confirm({{ __('site.confirm_deactivate_driver') }});'">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" 
                                         class="tap-target text-sm font-medium text-red-600 hover:text-red-900">
-                                    Deactivate
+                                    {{ __('site.deactivate') }}
                                 </button>
                             </form>
                         </div>
@@ -49,12 +48,12 @@
             </div>
         @else
             <div class="text-center py-8">
-                <p class="text-slate-500">You haven't added any drivers yet.</p>
+                <p class="text-slate-500">{{ __('site.no_drivers_yet') }}</p>
                 <a href="{{ route('manager.drivers.create') }}" 
                    class="mt-4 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-900">
-                    Add Your First Driver
+                    {{ __('site.add_first_driver') }}
                 </a>
-            </div>
+            </div>        
         @endif
     </div>
 </x-layouts.mobile>

@@ -10,10 +10,14 @@ use App\Http\Controllers\Agent\DashboardController as AgentDashboardController;
 use App\Http\Controllers\Agent\DeliveryController as AgentDeliveryController;
 use App\Http\Controllers\Agent\TicketController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\Manager\DeliveryController as ManagerDeliveryController;
 use App\Http\Controllers\Manager\Truck\TruckController;
+use App\Http\Controllers\Manager\Driver\DriverController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/language/{locale}', [LanguageController::class, 'switch'])->name('language.switch');
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -94,5 +98,5 @@ Route::middleware(['auth', 'role:' . User::ROLE_TRUCK_MANAGER])
                 Route::resource('trucks', TruckController::class)->except(['show']);
 
                 // Driver management for managers
-                Route::resource('drivers', App\Http\Controllers\Manager\Driver\DriverController::class)->except(['show']);
+                Route::resource('drivers', DriverController::class)->except(['show']);
     });

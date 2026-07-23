@@ -1,58 +1,63 @@
-<x-layouts.mobile title="Report Delivery">
+<x-layouts.mobile :title="__('site.welcome_manager')">
     <div class="bg-white rounded-2xl shadow p-5 mb-4">
-        <h2 class="font-bold text-lg text-slate-800 mb-4">New Delivery</h2>
+        <h2 class="font-bold text-lg text-slate-800 mb-4">{{ __('site.new_delivery') }}</h2>
         <form method="POST" action="{{ route('manager.deliveries.store') }}" class="space-y-4">
             @csrf
+            <meta name="csrf-token" content="{{ csrf_token() }}">
+                        <script>
+                            // Set CSRF token for all AJAX requests
+                            axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                        </script>
             <div>
-                <label class="block text-sm font-medium text-slate-700 mb-1">1. Select Station</label>
+                <label class="block text-sm font-medium text-slate-700 mb-1">1. {{ __('site.select_station') }}</label>
                 <select name="station_id" required class="w-full rounded-xl border border-slate-300 px-4 py-3 text-lg" style="min-height:48px">
-                    <option value="">Choose a station...</option>
+                    <option value="">{{ __('site.choose_a_station') }}</option>
                     @foreach ($stations as $station)
                         <option value="{{ $station->id }}" @selected(old('station_id') == $station->id)>{{ $station->name }}</option>
                     @endforeach
                 </select>
             </div>
             <div>
-                <label class="block text-sm font-medium text-slate-700 mb-1">2. Select Truck</label>
-                <select name="truck_id" required class="w-full rounded-xl border border-slate-300 px-4 py-3 text-lg" style="min-height:48px">
-                    <option value="">Choose a truck...</option>
-                    @foreach ($trucks as $truck)
-                        <option value="{{ $truck->id }}" @selected(old('truck_id') == $truck->id)>
-                            {{ $truck->plate_number }} ({{ $truck->capacity }} blocks)
+                <label class="block text-sm font-medium text-slate-700 mb-1">2. {{ __('site.select_driver') }}</label>
+                <select name="driver_id" required class="w-full rounded-xl border border-slate-300 px-4 py-3 text-lg" style="min-height:48px">
+                    <option value="">{{ __('site.choose_a_driver') }}</option>
+                    @foreach ($drivers as $driver)
+                        <option value="{{ $driver->id }}" @selected(old('driver_id') == $driver->id)>
+                            {{ $driver->name }} ({{ $driver->mobile }})
                         </option>
                     @endforeach
                 </select>
             </div>
             <div>
-                <label class="block text-sm font-medium text-slate-700 mb-1">3. Number of Ice Blocks</label>
+                <label class="block text-sm font-medium text-slate-700 mb-1">3. {{ __('site.number_of_ice_blocks') }}</label>
                 <input type="number" name="blocks_delivered" min="1" required inputmode="numeric"
                     value="{{ old('blocks_delivered') }}"
                     placeholder="e.g. 200"
                     class="w-full rounded-xl border border-slate-300 px-4 py-3 text-2xl font-bold" style="min-height:48px">
             </div>
             <div>
-                <label class="block text-sm font-medium text-slate-700 mb-1">Notes (optional)</label>
+                <label class="block text-sm font-medium text-slate-700 mb-1">{{ __('site.notes_optional') }}</label>
                 <input type="text" name="notes" value="{{ old('notes') }}"
                     class="w-full rounded-xl border border-slate-300 px-4 py-3 text-base" style="min-height:48px">
             </div>
             <button type="submit"
                 class="tap-target w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-lg font-bold py-4">
-                3. Submit Delivery
+                2. {{ __('site.submit_delivery') }}
             </button>
         </form>
     </div>
 
     <a href="{{ route('manager.deliveries.history') }}" class="tap-target block text-center w-full rounded-xl bg-slate-200 text-slate-700 font-semibold py-3">
-        View My Delivery History
+        {{ __('site.view_delivery_history') }}
     </a>
 
     <a href="{{ route('manager.drivers.index') }}" class="tap-target block text-center w-full rounded-xl bg-slate-200 text-slate-700 font-semibold py-3 mt-2">
-        Manage My Drivers
+        {{ __('site.manage_my_drivers') }}
     </a>
 
     @if ($recent->isNotEmpty())
         <div class="mt-6">
-            <h3 class="text-sm font-semibold text-slate-500 mb-2">Recent Deliveries</h3>
+            <h3 class="text-sm font-semibold text-slate-500 mb-2">{{ __('site.recent_deliveries') }}</h3>
             <div class="space-y-2">
                 @foreach ($recent as $delivery)
                     <div class="bg-white rounded-xl shadow p-3 flex items-center justify-between text-sm">
@@ -61,13 +66,13 @@
                             <p class="text-slate-400 text-xs">{{ $delivery->submitted_at->diffForHumans() }}</p>
                         </div>
                         <div class="text-right">
-                            <p class="font-bold">{{ $delivery->blocks_delivered }} blk</p>
+                            <p class="font-bold">{{ $delivery->blocks_delivered }} {{ __('site.blk') }}</p>
                             @if ($delivery->status === 'pending')
-                                <span class="text-amber-600 text-xs">Pending</span>
+                                <span class="text-amber-600 text-xs">{{ __('site.pending') }}</span>
                             @elseif ($delivery->status === 'confirmed')
-                                <span class="text-green-600 text-xs">Confirmed</span>
+                                <span class="text-green-600 text-xs">{{ __('site.confirmed') }}</span>
                             @else
-                                <span class="text-red-600 text-xs">Rejected</span>
+                                <span class="text-red-600 text-xs">{{ __('site.rejected') }}</span>
                             @endif
                         </div>
                     </div>

@@ -27,7 +27,10 @@ return new class extends Migration
             $table->index('is_active');
         });
 
-        DB::statement('ALTER TABLE citizens ADD CONSTRAINT chk_ration_positive CHECK (daily_ration > 0)');
+        // SQLite doesn't support ADD CONSTRAINT CHECK in ALTER TABLE
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE citizens ADD CONSTRAINT chk_ration_positive CHECK (daily_ration > 0)');
+        }
     }
 
     /**

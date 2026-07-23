@@ -25,7 +25,8 @@ class DriverController extends Controller
 
     public function create()
     {
-        return view('manager.driver.form', ['driver' => new User()]);
+        $trucks = Truck::query()->forManager(auth()->id())->active()->orderBy('plate_number')->get();
+        return view('manager.driver.form', ['driver' => new User(), 'trucks' => $trucks]);
     }
 
     public function store(Request $request): RedirectResponse
@@ -33,6 +34,7 @@ class DriverController extends Controller
         $data = $this->validateData($request);
         $data['password'] = Hash::make($data['password']);
         $data['manager_id'] = $request->user()->id;
+        $data['role'] = User::ROLE_TRUCK_DRIVER;
 
         User::create($data);
 
@@ -44,7 +46,8 @@ class DriverController extends Controller
     {
         $this->ensureDriverBelongsToManager($driver);
 
-        return view('manager.driver.form', compact('driver'));
+        $trucks = Truck::query()->forManager(auth()->id())->active()->orderBy('plate_number')->get();
+        return view('manager.driver.form', compact('driver', 'trucks'));
     }
 
     public function update(Request $request, User $driver): RedirectResponse
@@ -57,6 +60,17 @@ class DriverController extends Controller
             $data['password'] = Hash::make($data['password']);
         } else {
             unset($data['password']);
+        }
+
+        // Ensure the selected truck belongs to the manager if provided
+        if (isset($data['truck_id'])) {
+            $truck = Truck::where('id', $data['truck_id'])
+                ->where('manager_id', $request->user()->id)
+                ->first();
+            
+            if (! $truck) {
+                $data['truck_id'] = null;
+            }
         }
 
         $driver->update($data);

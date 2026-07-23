@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'fa' ? 'rtl' : 'ltr' }}">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>{{ $title ?? config('app.name') }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    @include('components.layouts.partials.locale-head')
 </head>
 <body class="bg-slate-100 min-h-screen flex items-center justify-center p-4">
+    {{-- Language switcher (top-right in LTR / top-left in RTL) --}}
+    <div class="fixed top-4 {{ app()->getLocale() === 'fa' ? 'left-4' : 'right-4' }} z-50">
+        @include('components.language-switcher')
+    </div>
+
     {{ $slot }}
 </body>
 </html>

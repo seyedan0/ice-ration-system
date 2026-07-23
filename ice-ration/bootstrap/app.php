@@ -16,6 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \App\Http\Middleware\EnsureRole::class,
         ]);
 
+        // Apply locale from session (or default to Persian) on every web request
+        $middleware->web(append: [
+            \App\Http\Middleware\SetLocale::class,
+        ]);
+
         $middleware->redirectGuestsTo('/login');
         $middleware->redirectUsersTo(function ($request) {
             $user = $request->user();

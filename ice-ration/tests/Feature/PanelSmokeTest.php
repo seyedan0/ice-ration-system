@@ -14,9 +14,9 @@ class PanelSmokeTest extends TestCase
     use RefreshDatabase;
 
     public function test_login_page_renders(): void
-    {
-        $this->get('/login')->assertOk()->assertSee('Sign In');
-    }
+        {
+            $this->get('/login')->assertOk()->assertSee('ورود به سیستم');
+        }
 
     public function test_guest_is_redirected_from_protected_routes(): void
     {
@@ -32,7 +32,7 @@ class PanelSmokeTest extends TestCase
         $admin = User::factory()->superAdmin()->create();
 
         $this->actingAs($admin)->get('/admin/dashboard')->assertOk();
-        $this->actingAs($admin)->get('/admin/analytics')->assertOk()->assertSee('Analytics');
+        $this->actingAs($admin)->get('/admin/analytics')->assertOk()->assertSee('تحلیل داده‌ها');
         $this->actingAs($admin)->get('/admin/analytics/export')->assertOk();
         $this->actingAs($admin)->get('/admin/stations')->assertOk();
         $this->actingAs($admin)->get('/admin/stations/create')->assertOk();
@@ -52,24 +52,24 @@ class PanelSmokeTest extends TestCase
     }
 
     public function test_station_agent_panel_pages_render(): void
-    {
-        $station = Station::factory()->create();
-        $agent = User::factory()->stationAgent()->create(['station_id' => $station->id]);
-        Delivery::factory()->create(['station_id' => $station->id]);
+        {
+            $station = Station::factory()->create();
+            $agent = User::factory()->stationAgent()->create(['station_id' => $station->id]);
+            Delivery::factory()->create(['station_id' => $station->id]);
 
-        $this->actingAs($agent)->get('/agent/dashboard')->assertOk();
-        $this->actingAs($agent)->get('/agent/validate')->assertOk()->assertSee('Validate Citizen');
-        $this->actingAs($agent)->get('/agent/deliveries')->assertOk();
-    }
+            $this->actingAs($agent)->get('/agent/dashboard')->assertOk();
+            $this->actingAs($agent)->get('/agent/validate')->assertOk()->assertSee('بررسی اهالی');
+            $this->actingAs($agent)->get('/agent/deliveries')->assertOk();
+        }
 
     public function test_truck_manager_panel_pages_render(): void
-    {
-        Station::factory()->create();
-        $driver = User::factory()->truckManager()->create();
+        {
+            Station::factory()->create();
+            $driver = User::factory()->truckManager()->create();
 
-        $this->actingAs($driver)->get('/manager/dashboard')->assertOk()->assertSee('New Delivery');
-        $this->actingAs($driver)->get('/manager/deliveries/history')->assertOk();
-    }
+            $this->actingAs($driver)->get('/manager/dashboard')->assertOk()->assertSee('پنل مدیر کامیون');
+            $this->actingAs($driver)->get('/manager/deliveries/history')->assertOk();
+        }
 
     public function test_citizen_card_and_qr_render(): void
     {

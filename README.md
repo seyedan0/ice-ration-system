@@ -16,7 +16,7 @@ Built with **Laravel 13** + **MySQL 8** + **Blade/Alpine.js/Tailwind CSS**.
 |---|---|---|
 | **Super Admin** | Desktop | Stations, staff, and citizen CRUD; QR card printing; manual inventory adjustments; full **analytics dashboard** (KPIs, charts, CSV export) |
 | **Station Agent** | Mobile-first | QR/manual citizen lookup, green/red claim-status cards, one-tap ration confirmation, truck manager delivery confirmation |
-| **Truck Manager** | Mobile-first | **Fleet & driver management**: register/edit/deactivate their own trucks; create/manage drivers assigned to their fleet; 2-step delivery reporting (select station → select truck → blocks); delivery history |
+| **Truck Manager** | Mobile-first | **Fleet & driver management**: register/edit/deactivate their own trucks; create/manage drivers assigned to their fleet; view and manage only their assigned trucks and drivers; 2-step delivery reporting (select station → select truck → blocks); delivery history |
 
 ### Core business rules enforced
 - One ration claim per citizen per calendar day (`citizen_id + date` uniqueness).
@@ -82,7 +82,7 @@ Seeded accounts (password for all: `password`):
 | Station Agent | `0921000001`, `0921000002`, ... |
 | Truck Manager | `0931000001`, `0931000002` |
 
-Truck managers own no trucks by default — each must register trucks under **My Trucks** (`/manager/trucks`) before filing deliveries.
+Truck managers own no trucks by default — each must register trucks under **My Trucks** (`/manager/trucks`) and drivers under **My Drivers** (`/manager/drivers`) before filing deliveries. Trucks and drivers are automatically assigned to the logged-in manager.
 
 Start the dev server:
 
@@ -134,6 +134,13 @@ tests/Feature/ # atomic claim, insufficient stock, daily reset, panel smoke test
 ```
 
 ---
+
+## 🔧 Recent Fixes
+
+### Fixed Truck Manager Driver Management (2026-07)
+- Fixed route error preventing access to driver management pages (`Target class [Manager\Driver\DriverController] does not exist`)
+- Ensured proper controller imports and route definitions for driver CRUD operations
+- Verified that truck managers can successfully create, edit, and deactivate drivers assigned to their fleet
 
 ## 📄 License
 

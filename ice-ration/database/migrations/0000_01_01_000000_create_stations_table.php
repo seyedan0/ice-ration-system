@@ -24,7 +24,10 @@ return new class extends Migration
             $table->index('is_active');
         });
 
-        DB::statement('ALTER TABLE stations ADD CONSTRAINT chk_stock_non_negative CHECK (current_stock >= 0)');
+        // SQLite doesn't support ADD CONSTRAINT CHECK in ALTER TABLE
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE stations ADD CONSTRAINT chk_stock_non_negative CHECK (current_stock >= 0)');
+        }
     }
 
     /**

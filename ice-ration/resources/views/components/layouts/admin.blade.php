@@ -1,29 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'fa' ? 'rtl' : 'ltr' }}">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $title ?? 'Admin' }} - {{ config('app.name') }}</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    @include('components.layouts.partials.locale-head')
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 </head>
 <body class="bg-slate-50 text-slate-800">
     <div class="flex min-h-screen">
         <aside class="w-64 bg-slate-900 text-slate-200 flex-shrink-0 hidden md:flex md:flex-col">
             <div class="px-6 py-5 text-white font-bold text-lg border-b border-slate-800">
-                ❄ Ice Ration
+                ❄ {{ __('site.app_name') }}
             </div>
             <nav class="flex-1 px-3 py-4 space-y-1 text-sm">
                 @php
                     $links = [
-                        ['route' => 'admin.dashboard', 'label' => 'Dashboard', 'icon' => '🏠'],
-                        ['route' => 'admin.analytics', 'label' => 'Analytics', 'icon' => '📊'],
-                        ['route' => 'admin.stations.index', 'label' => 'Stations', 'icon' => '🏭'],
-                        ['route' => 'admin.users.index', 'label' => 'Staff (Agents/Drivers)', 'icon' => '👥'],
-                        ['route' => 'admin.citizens.index', 'label' => 'Citizens', 'icon' => '🪪'],
-                        ['route' => 'admin.inventory', 'label' => 'Inventory', 'icon' => '📦'],
+                        ['route' => 'admin.dashboard',  'label' => __('site.dashboard'),       'icon' => '🏠'],
+                        ['route' => 'admin.analytics',  'label' => __('site.analytics'),       'icon' => '📊'],
+                        ['route' => 'admin.stations.index', 'label' => __('site.stations'),     'icon' => '🏭'],
+                        ['route' => 'admin.users.index', 'label' => __('site.staff_agents_drivers'), 'icon' => '👥'],
+                        ['route' => 'admin.citizens.index', 'label' => __('site.citizens'),    'icon' => '🪪'],
+                        ['route' => 'admin.inventory',   'label' => __('site.inventory'),       'icon' => '📦'],
                     ];
                 @endphp
                 @foreach ($links as $link)
@@ -37,19 +32,27 @@
             <div class="px-4 py-4 border-t border-slate-800">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button class="w-full text-left text-sm text-slate-300 hover:text-white">↩ Sign out ({{ auth()->user()?->name }})</button>
+                    <button class="w-full text-left text-sm text-slate-300 hover:text-white">↩ {{ __('site.sign_out') }} ({{ auth()->user()?->name }})</button>
                 </form>
             </div>
         </aside>
 
         <div class="flex-1 flex flex-col min-w-0">
             <header class="md:hidden bg-slate-900 text-white px-4 py-3 flex items-center justify-between">
-                <span class="font-bold">❄ Ice Ration Admin</span>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button class="text-sm">Sign out</button>
-                </form>
+                <span class="font-bold">❄ {{ __('site.app_name') }} — {{ __('site.welcome_admin') }}</span>
+                <div class="flex items-center gap-2">
+                    @include('components.language-switcher')
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button class="text-sm">{{ __('site.sign_out') }}</button>
+                    </form>
+                </div>
             </header>
+
+            {{-- Desktop top bar with language switcher on right (LTR) / left (RTL) --}}
+            <div class="hidden md:flex items-center justify-end px-8 py-3 border-b border-slate-200 bg-white">
+                @include('components.language-switcher')
+            </div>
 
             <main class="flex-1 p-4 md:p-8 max-w-7xl w-full mx-auto">
                 @if (session('status'))
@@ -67,7 +70,7 @@
                     </div>
                 @endif
 
-                <h1 class="text-2xl font-bold text-slate-900 mb-6">{{ $title ?? 'Dashboard' }}</h1>
+                <h1 class="text-2xl font-bold text-slate-900 mb-6">{{ $title ?? __('site.dashboard') }}</h1>
 
                 {{ $slot }}
             </main>

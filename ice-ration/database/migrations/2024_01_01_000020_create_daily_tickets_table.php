@@ -29,7 +29,10 @@ return new class extends Migration
             $table->index('status');
         });
 
-        DB::statement('ALTER TABLE daily_tickets ADD CONSTRAINT chk_blocks_positive CHECK (allocated_blocks > 0)');
+        // SQLite doesn't support ADD CONSTRAINT CHECK in ALTER TABLE
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE daily_tickets ADD CONSTRAINT chk_blocks_positive CHECK (allocated_blocks > 0)');
+        }
     }
 
     /**
